@@ -1,0 +1,4 @@
+body{font-family:sans-serif;max-width:800px;margin:auto;padding:20px}
+#chat{height:60vh;overflow:auto;border:1px solid #ccc;padding:10px;margin-bottom:10px}
+.row{display:flex;gap:8px}
+input{flex:1;padding:8px}
