@@ -1,20 +1,305 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>John</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>John v1.5</title>
+  <meta name="description" content="John is a clean, logical, memory-driven assistant built as a practical thinking partner." />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<h1>John</h1>
-<div id="chat"></div>
-<div class="row">
-<button id="mic">🎤 Speak</button>
-<input id="text" placeholder="Type a message">
-<button id="send">Send</button>
-</div>
-<script src="memory.js"></script>
-<script src="app.js"></script>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="brand-row">
+          <h1>John</h1>
+          <span class="status-pill" id="statusPill">Ready</span>
+        </div>
+        <p class="subtitle">Thinking Partner & Assistant</p>
+      </div>
+
+      <div class="intelligence" id="intelligence" aria-label="John is thinking">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <nav class="nav" aria-label="Primary">
+          <button class="nav-item active" data-page="dashboard">Dashboard</button>
+          <button class="nav-item" data-page="chat">Chat</button>
+          <button class="nav-item" data-page="memory">Memory</button>
+          <button class="nav-item" data-page="goals">Goals</button>
+          <button class="nav-item" data-page="constitution">Constitution</button>
+          <button class="nav-item" data-page="settings">Settings</button>
+        </nav>
+
+        <div class="sidebar-card">
+          <div class="sidebar-title">Today</div>
+          <div class="metric" id="todayFocus">Build John v1.5</div>
+          <div class="muted" id="todaySummary">No summary yet.</div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-title">Quick Stats</div>
+          <div class="stat-grid">
+            <div><strong id="memoryCount">0</strong><span>Memories</span></div>
+            <div><strong id="goalCount">0</strong><span>Goals</span></div>
+            <div><strong id="insightCount">0</strong><span>Insights</span></div>
+            <div><strong id="chatCount">0</strong><span>Messages</span></div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section class="page active" id="dashboardPage">
+          <div class="page-header">
+            <div>
+              <h2>Dashboard</h2>
+              <p>Overview of goals, insights, and current focus.</p>
+            </div>
+            <button class="ghost-btn" id="refreshDashboard">Refresh</button>
+          </div>
+
+          <div class="card-grid">
+            <article class="card">
+              <div class="card-kicker">Current Focus</div>
+              <h3 id="dashFocus">John v1.5</h3>
+              <p id="dashFocusText">A practical assistant with memory, transparency, and thoughtful reasoning.</p>
+            </article>
+
+            <article class="card">
+              <div class="card-kicker">Next Action</div>
+              <h3 id="dashNextAction">Choose a goal or ask John a question.</h3>
+              <p>John should help you move forward, not just talk.</p>
+            </article>
+
+            <article class="card">
+              <div class="card-kicker">Recent Insight</div>
+              <h3 id="dashInsight">Nothing saved yet.</h3>
+              <p>Insights are short conclusions John derives from memories and conversations.</p>
+            </article>
+
+            <article class="card">
+              <div class="card-kicker">Memory Snapshot</div>
+              <h3 id="dashMemorySnapshot">0 items stored</h3>
+              <p id="dashMemoryDetail">Important context will appear here as you chat.</p>
+            </article>
+          </div>
+
+          <div class="section-block">
+            <div class="section-header">
+              <h3>Recent Goals</h3>
+              <span class="small" id="recentGoalsLabel">No active goals</span>
+            </div>
+            <div class="goal-preview" id="recentGoals"></div>
+          </div>
+
+          <div class="section-block">
+            <div class="section-header">
+              <h3>Recent Insights</h3>
+              <span class="small">Transparency-first summaries</span>
+            </div>
+            <div class="insight-list" id="recentInsights"></div>
+          </div>
+        </section>
+
+        <section class="page" id="chatPage">
+          <div class="page-header">
+            <div>
+              <h2>Chat</h2>
+              <p>Ask John anything. Replies include reasoning when useful.</p>
+            </div>
+            <button class="ghost-btn" id="clearChatBtn">Clear Chat</button>
+          </div>
+
+          <div class="chat-panel">
+            <div class="chat-log" id="chatLog" aria-live="polite"></div>
+
+            <div class="thinking-row" id="thinkingRow" hidden>
+              <div class="intelligence compact active" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <span>John is reasoning...</span>
+            </div>
+
+            <div class="composer">
+              <button class="icon-btn" id="micBtn" title="Speak">🎤</button>
+              <input id="messageInput" type="text" placeholder="Ask John something practical..." autocomplete="off" />
+              <button class="primary-btn" id="sendBtn">Send</button>
+            </div>
+
+            <div class="helper-row">
+              <span>Tip: try “Should I study now or later?”</span>
+              <button class="link-btn" id="testVoiceBtn">Test Voice</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="memoryPage">
+          <div class="page-header">
+            <div>
+              <h2>Memory</h2>
+              <p>Visible, editable memory with categories and control.</p>
+            </div>
+            <div class="header-actions">
+              <button class="ghost-btn" id="exportBtn">Export</button>
+              <label class="ghost-btn file-btn">
+                Import
+                <input type="file" id="importInput" accept="application/json" hidden />
+              </label>
+            </div>
+          </div>
+
+          <div class="filter-row" id="memoryFilters">
+            <button class="filter active" data-filter="all">All</button>
+            <button class="filter" data-filter="critical">Critical</button>
+            <button class="filter" data-filter="important">Important</button>
+            <button class="filter" data-filter="temporary">Temporary</button>
+          </div>
+
+          <div class="stack">
+            <div class="mini-form card">
+              <div class="mini-form-head">
+                <h3>Add memory</h3>
+                <span class="small">Manual memory control</span>
+              </div>
+              <div class="mini-grid">
+                <input id="memoryText" type="text" placeholder="Write a memory..." />
+                <select id="memoryType">
+                  <option value="important">Important</option>
+                  <option value="critical">Critical</option>
+                  <option value="temporary">Temporary</option>
+                </select>
+                <button class="primary-btn" id="addMemoryBtn">Save</button>
+              </div>
+            </div>
+
+            <div id="memoryList" class="list"></div>
+          </div>
+        </section>
+
+        <section class="page" id="goalsPage">
+          <div class="page-header">
+            <div>
+              <h2>Goals</h2>
+              <p>Track progress, next actions, and notes.</p>
+            </div>
+          </div>
+
+          <div class="mini-form card">
+            <div class="mini-form-head">
+              <h3>Add goal</h3>
+              <span class="small">Keep it practical</span>
+            </div>
+            <div class="goal-form">
+              <input id="goalTitle" type="text" placeholder="Goal title" />
+              <input id="goalNextAction" type="text" placeholder="Next action" />
+              <input id="goalNotes" type="text" placeholder="Notes" />
+              <div class="range-row">
+                <label for="goalProgress">Progress</label>
+                <input id="goalProgress" type="range" min="0" max="100" value="0" />
+                <span id="goalProgressValue">0%</span>
+              </div>
+              <button class="primary-btn" id="addGoalBtn">Add goal</button>
+            </div>
+          </div>
+
+          <div id="goalList" class="list"></div>
+        </section>
+
+        <section class="page" id="constitutionPage">
+          <div class="page-header">
+            <div>
+              <h2>Constitution</h2>
+              <p>John’s operating rules.</p>
+            </div>
+          </div>
+
+          <div class="constitution-grid" id="constitutionList"></div>
+        </section>
+
+        <section class="page" id="settingsPage">
+          <div class="page-header">
+            <div>
+              <h2>Settings</h2>
+              <p>Voice, memory, appearance, and AI connection settings.</p>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <div class="card">
+              <div class="card-kicker">Voice</div>
+              <div class="setting-group">
+                <label for="voiceSelect">Speech voice</label>
+                <select id="voiceSelect"></select>
+                <label class="toggle">
+                  <input type="checkbox" id="voiceEnabled" />
+                  <span>Speak responses aloud</span>
+                </label>
+                <button class="ghost-btn" id="refreshVoices">Refresh voices</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-kicker">Reasoning</div>
+              <div class="setting-group">
+                <label class="toggle">
+                  <input type="checkbox" id="showWhyOnReply" />
+                  <span>Show transparency panel by default</span>
+                </label>
+                <label class="toggle">
+                  <input type="checkbox" id="autoSaveInsights" />
+                  <span>Auto-save insights from chats</span>
+                </label>
+                <label class="toggle">
+                  <input type="checkbox" id="autoClassifyMemory" />
+                  <span>Auto-classify memories</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-kicker">AI Connection</div>
+              <div class="setting-group">
+                <label for="apiBaseUrl">API Base URL</label>
+                <input id="apiBaseUrl" type="text" placeholder="Optional: OpenAI-compatible endpoint" />
+                <label for="apiKey">API Key</label>
+                <input id="apiKey" type="password" placeholder="Optional" />
+                <label for="apiModel">Model</label>
+                <input id="apiModel" type="text" placeholder="Optional model name" />
+                <button class="ghost-btn" id="saveSettingsBtn">Save settings</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-kicker">Data</div>
+              <div class="setting-group">
+                <button class="ghost-btn" id="clearDataBtn">Clear all local data</button>
+                <p class="muted">Use export first if you want a backup.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="insight-rail">
+        <div class="sidebar-card">
+          <div class="sidebar-title">Why?</div>
+          <div class="muted">Open reasoning and memory context from replies.</div>
+          <div class="why-panel" id="whyPanel">
+            <p>Select an assistant reply to see the reasoning.</p>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-title">Constitution Preview</div>
+          <div class="mini-constitution" id="miniConstitution"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
