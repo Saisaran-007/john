@@ -152,3 +152,12 @@ h1 { margin: 0; font-size: 2rem; letter-spacing: -0.04em; }
   .helper-row { flex-direction: column; align-items: flex-start; }
   .topbar { flex-direction: column; }
 }
+
+.voice-center{align-items:center}
+.voice-panel{min-width:260px;text-align:right}
+.voice-status{font-weight:700;margin-bottom:8px}
+.layout{grid-template-columns:260px minmax(0,1fr) 260px}
+@media (max-width:1200px){.layout{grid-template-columns:1fr}.sidebar,.insight-rail{position:static}}
+.nav-item:hover{transform:translateX(4px)}
+.listening-ring{box-shadow:0 0 25px #3b82f6!important;animation:pulseRing 1.5s infinite}
+@keyframes pulseRing{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}

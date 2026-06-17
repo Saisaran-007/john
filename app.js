@@ -534,3 +534,18 @@ function cryptoId() { if (window.crypto?.randomUUID) return crypto.randomUUID();
 function escapeHtml(str) { return String(str ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;'); }
 function escapeHtmlAttr(str) { return escapeHtml(str).replaceAll('`', '&#96;'); }
 function formatDate(value) { try { return new Date(value).toLocaleString([], { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch { return String(value || ''); } }
+
+
+document.addEventListener('DOMContentLoaded',()=>{
+ const mic=document.getElementById('micBtn');
+ if(mic){mic.textContent='🎙';}
+ const v=document.getElementById('voiceCommandBtn');
+ if(v){
+   v.addEventListener('click',()=>{
+      v.classList.toggle('listening-ring');
+      const s=document.querySelector('.voice-status');
+      if(v.classList.contains('listening-ring')) s.textContent='● LISTENING';
+      else s.textContent='● READY';
+   });
+ }
+});

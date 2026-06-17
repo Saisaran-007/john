@@ -9,7 +9,7 @@
 </head>
 <body>
   <div class="app-shell">
-    <header class="topbar">
+    <header class="topbar voice-center">
       <div>
         <div class="brand-row">
           <h1>John</h1>
@@ -18,6 +18,12 @@
         <p class="subtitle">Thinking Partner & Assistant</p>
       </div>
 
+      <div class="voice-panel">
+        <div class="voice-status">● READY</div>
+        <div>Current Mode: Casual Conversation</div>
+        <div>Subtitles: <span id="subtitleState">ON</span></div>
+        <button id="voiceCommandBtn" class="primary-btn">🎙 Start Conversation</button>
+      </div>
       <div class="intelligence" id="intelligence" aria-label="John is thinking">
         <span></span><span></span><span></span><span></span><span></span>
       </div>
